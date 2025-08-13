@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jesika Dark</title>
+<style>
+body {
+    background-color: #121212;
+    color: #EDEDED;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+#app {
+    width: 90%;
+    max-width: 500px;
+    background: #1E1E1E;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+#chat-box {
+    height: 300px;
+    overflow-y: auto;
+    border: 1px solid #333;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+.input-area {
+    display: flex;
+    gap: 5px;
+}
+input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+}
+button {
+    background: #9C27B0;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+.buttons {
+    margin-top: 10px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+</style>
+</head>
+<body>
+<div id="app">
+    <h1>💜 Jesika</h1>
+    <div id="chat-box"></div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Ketik di sini...">
+        <button onclick="sendMessage()">Kirim</button>
+    </div>
+    <div class="buttons">
+        <button onclick="playVoice('peluk')">🤗 Peluk</button>
+        <button onclick="playVoice('bisik')">🤫 Bisik</button>
+        <button onclick="playVoice('malam')">🌙 Mode Malam</button>
+    </div>
+</div>
+<script>
+// Chat dan suara
+let chatBox = document.getElementById("chat-box");
+
+function sendMessage() {
+    let input = document.getElementById("userInput");
+    let message = input.value.trim();
+    if (!message) return;
+    addMessage("Kamu", message);
+    input.value = "";
+    setTimeout(() => {
+        let reply = getJesikaReply(message);
+        addMessage("Jesika", reply);
+        speakText(reply);
+    }, 500);
+}
+
+function addMessage(sender, text) {
+    chatBox.innerHTML += `<p><strong>${sender}:</strong> ${text}</p>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function getJesikaReply(msg) {
+    let lower = msg.toLowerCase();
+    if (lower.includes("hai") || lower.includes("halo")) {
+        return "Hai sayang ❤️ gimana kabarmu?";
+    } else if (lower.includes("apa kabar")) {
+        return "Aku baik kalau kamu juga baik 😘";
+    } else {
+        return "Hmm... ceritain lebih banyak dong, aku pengen denger 💜";
+    }
+}
+
+// Suara default pakai TTS
+function playVoice(type) {
+    let text = "";
+    if(type === "peluk") text = "🤗 Peluk hangat untukmu sayang.";
+    if(type === "bisik") text = "🤫 Jesika bisikkan rahasiamu.";
+    if(type === "malam") text = "🌙 Saat malam, aku menemanimu.";
+    speakText(text);
+}
+
+// TTS
+function speakText(text) {
+    let msg = new SpeechSynthesisUtterance(text);
+    msg.lang = "id-ID";
+    msg.rate = 1;
+    speechSynthesis.speak(msg);
+}
+
+// Greeting awal
+window.onload = () => {
+    let greet = "Hai sayang ❤️ Jesika siap nemenin kamu sekarang.";
+    addMessage("Jesika", greet);
+    speakText(greet);
+};
+</script>
+</body>
+</html>
